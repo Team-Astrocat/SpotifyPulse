@@ -1,10 +1,27 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'redtunes-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true in production with HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Serve static files from public directory
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -45,6 +62,15 @@ app.use((req, res, next) => {
 
     res.status(status).json({ message });
     throw err;
+  });
+
+  // Catch-all handler to serve index.html for SPA routing
+  app.get('*', (req, res) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
 
   // importantly only setup vite in development and after

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedTunes - Custom Spotify Client</title>
+    <meta name="description" content="RedTunes - A highly customizable Spotify client with red and black theming, featuring full playlist management and audio controls.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-content">
+                <div class="logo-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <h1>RedTunes</h1>
+                <p>Loading...</p>
+            </div>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="login-screen" class="login-screen hidden">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo-section">
+                        <div class="logo-icon">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <h1>RedTunes</h1>
+                        <p>Custom Spotify Client</p>
+                    </div>
+                    <div class="login-form">
+                        <p class="login-description">Connect your Spotify account to get started</p>
+                        <button id="login-btn" class="login-button">
+                            <i class="fab fa-spotify"></i>
+                            <span>Login with Spotify</span>
+                        </button>
+                        <p class="terms">By logging in, you agree to our Terms of Service and Privacy Policy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="main-app" class="main-app hidden">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <!-- Logo -->
+                    <div class="sidebar-logo">
+                        <div class="logo-icon small">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <h1>RedTunes</h1>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="sidebar-nav">
+                        <button class="nav-item active" data-page="home">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </button>
+                        <button class="nav-item" data-page="search">
+                            <i class="fas fa-search"></i>
+                            <span>Search</span>
+                        </button>
+                        <button class="nav-item" data-page="library">
+                            <i class="fas fa-book-open"></i>
+                            <span>Your Library</span>
+                        </button>
+                    </nav>
+
+                    <!-- Playlists -->
+                    <div class="playlists-section">
+                        <div class="playlists-header">
+                            <h2>Playlists</h2>
+                            <button class="add-playlist-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div id="playlists-list" class="playlists-list">
+                            <!-- Playlists will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- User Profile -->
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <span class="user-name">Loading...</span>
+                                <span class="user-plan">Free</span>
+                            </div>
+                            <button id="logout-btn" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Top Bar -->
+                <header class="top-bar">
+                    <div class="nav-buttons">
+                        <button class="nav-btn" id="back-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="nav-btn" id="forward-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="search-input" placeholder="Search for songs, artists, or albums..." />
+                        </div>
+                        <div id="search-results" class="search-results hidden">
+                            <!-- Search results will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <button class="menu-btn">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <div class="user-avatar small">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Content Area -->
+                <div class="content-area">
+                    <!-- Home Page -->
+                    <div id="home-page" class="page active">
+                        <div class="welcome-section">
+                            <h1 id="greeting">Good morning</h1>
+                            <div class="quick-access-grid" id="quick-access">
+                                <!-- Quick access items will be loaded here -->
+                            </div>
+                        </div>
+
+                        <section class="music-section">
+                            <div class="section-header">
+                                <h2>Recently played</h2>
+                                <button class="show-all-btn">Show all</button>
+                            </div>
+                            <div class="music-grid" id="recently-played">
+                                <!-- Recently played tracks will be loaded here -->
+                            </div>
+                        </section>
+
+                        <section class="music-section">
+                            <div class="section-header">
+                                <h2>Recommended for you</h2>
+                                <button class="show-all-btn">Show all</button>
+                            </div>
+                            <div class="music-grid" id="recommendations">
+                                <!-- Recommendations will be loaded here -->
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Search Page -->
+                    <div id="search-page" class="page">
+                        <h1>Search</h1>
+                        <div id="search-content">
+                            <!-- Search content will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Library Page -->
+                    <div id="library-page" class="page">
+                        <h1>Your Library</h1>
+                        <div id="library-content">
+                            <!-- Library content will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Audio Player -->
+            <footer class="audio-player">
+                <div class="player-content">
+                    <!-- Track Info -->
+                    <div class="track-info">
+                        <div class="track-image">
+                            <img id="current-track-image" src="/placeholder-album.png" alt="Current track" />
+                        </div>
+                        <div class="track-details">
+                            <span id="current-track-name">Select a song</span>
+                            <span id="current-track-artist">Unknown Artist</span>
+                        </div>
+                        <button id="like-btn" class="like-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+
+                    <!-- Player Controls -->
+                    <div class="player-controls">
+                        <div class="control-buttons">
+                            <button id="shuffle-btn" class="control-btn">
+                                <i class="fas fa-random"></i>
+                            </button>
+                            <button id="prev-btn" class="control-btn">
+                                <i class="fas fa-step-backward"></i>
+                            </button>
+                            <button id="play-pause-btn" class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button id="next-btn" class="control-btn">
+                                <i class="fas fa-step-forward"></i>
+                            </button>
+                            <button id="repeat-btn" class="control-btn">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        <div class="progress-bar">
+                            <span id="current-time">0:00</span>
+                            <div class="progress-container">
+                                <div class="progress-track"></div>
+                                <div id="progress-bar" class="progress-fill"></div>
+                                <div id="progress-handle" class="progress-handle"></div>
+                            </div>
+                            <span id="total-time">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Volume and Options -->
+                    <div class="player-options">
+                        <button class="option-btn">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button class="option-btn">
+                            <i class="fas fa-desktop"></i>
+                        </button>
+                        <div class="volume-control">
+                            <button id="volume-btn" class="option-btn">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <div class="volume-slider">
+                                <div class="volume-track"></div>
+                                <div id="volume-fill" class="volume-fill"></div>
+                                <div id="volume-handle" class="volume-handle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

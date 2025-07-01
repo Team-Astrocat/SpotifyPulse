@@ -108,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Store user session
-      (req as any).session = { userId: user!.id };
+      (req.session as any).userId = user!.id;
 
       res.redirect("/?authenticated=true");
     } catch (error) {
@@ -119,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // User routes
   app.get("/api/user/me", async (req, res) => {
-    const userId = (req as any).session?.userId;
+    const userId = (req.session as any)?.userId;
     if (!userId) {
       return res.status(401).json({ error: "Not authenticated" });
     }
@@ -141,7 +141,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Spotify API proxy routes
   app.get("/api/spotify/*", async (req, res) => {
-    const userId = (req as any).session?.userId;
+    const userId = (req.session as any)?.userId;
     if (!userId) {
       return res.status(401).json({ error: "Not authenticated" });
     }
@@ -210,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // User settings routes
   app.get("/api/settings", async (req, res) => {
-    const userId = (req as any).session?.userId;
+    const userId = (req.session as any)?.userId;
     if (!userId) {
       return res.status(401).json({ error: "Not authenticated" });
     }
@@ -226,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/settings", async (req, res) => {
-    const userId = (req as any).session?.userId;
+    const userId = (req.session as any)?.userId;
     if (!userId) {
       return res.status(401).json({ error: "Not authenticated" });
     }
@@ -242,7 +242,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Logout route
   app.post("/api/auth/logout", (req, res) => {
-    (req as any).session = null;
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+      }
+    });
     res.json({ success: true });
   });
 
