@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(0, 0%, 100%);
+  --muted: hsl(0, 0%, 10%);
+  --muted-foreground: hsl(0, 0%, 60%);
+  --popover: hsl(0, 0%, 6%);
+  --popover-foreground: hsl(0, 0%, 100%);
+  --card: hsl(0, 0%, 6%);
+  --card-foreground: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 25%);
+  --input: hsl(0, 0%, 25%);
+  --primary: hsl(0, 100%, 50%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(0, 0%, 10%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --accent: hsl(0, 0%, 18%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --ring: hsl(0, 100%, 50%);
+  --radius: 0.5rem;
+
+  /* Custom RedTunes colors */
+  --red-primary: hsl(0, 100%, 50%);
+  --red-secondary: hsl(0, 100%, 40%);
+  --red-dark: hsl(0, 100%, 30%);
+  --red-light: hsl(0, 100%, 60%);
+  --black-primary: hsl(0, 0%, 0%);
+  --black-secondary: hsl(0, 0%, 10%);
+  --black-tertiary: hsl(0, 0%, 18%);
+  --gray-primary: hsl(0, 0%, 25%);
+  --gray-secondary: hsl(0, 0%, 40%);
+  --gray-tertiary: hsl(0, 0%, 60%);
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(0, 0%, 100%);
+  --muted: hsl(0, 0%, 10%);
+  --muted-foreground: hsl(0, 0%, 60%);
+  --popover: hsl(0, 0%, 6%);
+  --popover-foreground: hsl(0, 0%, 100%);
+  --card: hsl(0, 0%, 6%);
+  --card-foreground: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 25%);
+  --input: hsl(0, 0%, 25%);
+  --primary: hsl(0, 100%, 50%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(0, 0%, 10%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --accent: hsl(0, 0%, 18%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --ring: hsl(0, 100%, 50%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+  }
+}
+
+@layer utilities {
+  .red-primary {
+    color: var(--red-primary);
+  }
+  
+  .bg-red-primary {
+    background-color: var(--red-primary);
+  }
+  
+  .border-red-primary {
+    border-color: var(--red-primary);
+  }
+  
+  .hover\:bg-red-secondary:hover {
+    background-color: var(--red-secondary);
+  }
+  
+  .bg-black-primary {
+    background-color: var(--black-primary);
+  }
+  
+  .bg-black-secondary {
+    background-color: var(--black-secondary);
+  }
+  
+  .bg-black-tertiary {
+    background-color: var(--black-tertiary);
+  }
+  
+  .bg-gray-primary {
+    background-color: var(--gray-primary);
+  }
+  
+  .text-gray-secondary {
+    color: var(--gray-secondary);
+  }
+  
+  .text-gray-tertiary {
+    color: var(--gray-tertiary);
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--black-secondary);
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--gray-primary);
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--red-primary);
+  }
+  
+  .track-progress {
+    background: linear-gradient(90deg, var(--red-primary) 0%, var(--red-primary) var(--progress, 0%), var(--gray-primary) var(--progress, 0%), var(--gray-primary) 100%);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulseRed {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-pulse-red {
+  animation: pulseRed 2s infinite;
+}
