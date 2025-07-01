@@ -10,17 +10,41 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET || "your_client_
 // Dynamic redirect URI based on environment
 function getRedirectUri(req: any): string {
   if (process.env.SPOTIFY_REDIRECT_URI) {
+    console.log("Using env SPOTIFY_REDIRECT_URI:", process.env.SPOTIFY_REDIRECT_URI);
     return process.env.SPOTIFY_REDIRECT_URI;
   }
   
-  // Auto-detect from request headers
+  // Auto-detect from request headers - Render uses x-forwarded-proto and x-forwarded-host
   const protocol = req.get('x-forwarded-proto') || req.protocol || 'http';
-  const host = req.get('host') || 'localhost:5000';
-  return `${protocol}://${host}/api/auth/callback`;
+  const host = req.get('x-forwarded-host') || req.get('host') || 'localhost:5000';
+  const redirectUri = `${protocol}://${host}/api/auth/callback`;
+  
+  console.log("Auto-detected redirect URI:", redirectUri);
+  return redirectUri;
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Debug endpoint to check redirect URI generation
+  app.get("/api/debug/redirect-uri", (req, res) => {
+    const redirectUri = getRedirectUri(req);
+    res.json({
+      redirectUri,
+      headers: {
+        protocol: req.protocol,
+        host: req.get('host'),
+        'x-forwarded-proto': req.get('x-forwarded-proto'),
+        'x-forwarded-host': req.get('x-forwarded-host'),
+        'x-forwarded-for': req.get('x-forwarded-for'),
+        'user-agent': req.get('user-agent')
+      },
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        hasSpotifyRedirectUri: !!process.env.SPOTIFY_REDIRECT_URI
+      }
+    });
+  });
+
   // Authentication routes
   app.get("/api/auth/login", (req, res) => {
     const scopes = [
@@ -40,6 +64,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     ].join(" ");
 
     const redirectUri = getRedirectUri(req);
+    console.log("Generated redirect URI:", redirectUri);
+    console.log("Request headers:", {
+      protocol: req.protocol,
+      host: req.get('host'),
+      'x-forwarded-proto': req.get('x-forwarded-proto'),
+      'x-forwarded-host': req.get('x-forwarded-host')
+    });
+    
     const params = new URLSearchParams({
       response_type: "code",
       client_id: SPOTIFY_CLIENT_ID,
