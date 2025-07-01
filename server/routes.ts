@@ -25,6 +25,15 @@ function getRedirectUri(req: any): string {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Simple test endpoint
+  app.get("/api/test", (req, res) => {
+    res.json({ 
+      message: "API is working!", 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'unknown'
+    });
+  });
+
   // Debug endpoint to check redirect URI generation
   app.get("/api/debug/redirect-uri", (req, res) => {
     const redirectUri = getRedirectUri(req);
