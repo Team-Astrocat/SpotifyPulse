@@ -6,7 +6,18 @@ import { z } from "zod";
 
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID || process.env.VITE_SPOTIFY_CLIENT_ID || "your_client_id";
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET || "your_client_secret";
-const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || "http://localhost:5000/api/auth/callback";
+
+// Dynamic redirect URI based on environment
+function getRedirectUri(req: any): string {
+  if (process.env.SPOTIFY_REDIRECT_URI) {
+    return process.env.SPOTIFY_REDIRECT_URI;
+  }
+  
+  // Auto-detect from request headers
+  const protocol = req.get('x-forwarded-proto') || req.protocol || 'http';
+  const host = req.get('host') || 'localhost:5000';
+  return `${protocol}://${host}/api/auth/callback`;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -28,11 +39,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       "streaming"
     ].join(" ");
 
+    const redirectUri = getRedirectUri(req);
     const params = new URLSearchParams({
       response_type: "code",
       client_id: SPOTIFY_CLIENT_ID,
       scope: scopes,
-      redirect_uri: SPOTIFY_REDIRECT_URI,
+      redirect_uri: redirectUri,
       state: Math.random().toString(36).substring(7)
     });
 
@@ -57,7 +69,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         body: new URLSearchParams({
           grant_type: "authorization_code",
           code: code as string,
-          redirect_uri: SPOTIFY_REDIRECT_URI
+          redirect_uri: getRedirectUri(req)
         })
       });
 
